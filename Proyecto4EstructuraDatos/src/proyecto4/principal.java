@@ -24,10 +24,11 @@ import javax.swing.JOptionPane;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import org.graphstream.algorithm.Dijkstra;
+import org.graphstream.algorithm.Kruskal;
+import org.graphstream.algorithm.generator.DorogovtsevMendesGenerator;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.Path;
 import org.graphstream.ui.view.Viewer;
 
 /**
@@ -125,6 +126,7 @@ public class principal extends javax.swing.JFrame {
         jmi_verMapa = new javax.swing.JMenuItem();
         jmi_cerrarSesion = new javax.swing.JMenuItem();
         jmi_conocerAmigos = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jmi_enviarMensaje = new javax.swing.JMenuItem();
         jd_mensaje = new javax.swing.JDialog();
         jLabel10 = new javax.swing.JLabel();
@@ -347,13 +349,13 @@ public class principal extends javax.swing.JFrame {
                     .addGroup(jp_mensajesLayout.createSequentialGroup()
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ta_enviarMensaje, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)))
+                        .addComponent(ta_enviarMensaje, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jp_mensajesLayout.setVerticalGroup(
             jp_mensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_mensajesLayout.createSequentialGroup()
-                .addGap(0, 5, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jp_mensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel17)
                     .addComponent(jLabel9))
@@ -405,6 +407,15 @@ public class principal extends javax.swing.JFrame {
         });
         jm_menu.add(jmi_conocerAmigos);
 
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_K, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem2.setText("Kruskal ");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jm_menu.add(jMenuItem2);
+
         jmi_enviarMensaje.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jmi_enviarMensaje.setText("Enviar Mensaje");
         jmi_enviarMensaje.addActionListener(new java.awt.event.ActionListener() {
@@ -422,7 +433,7 @@ public class principal extends javax.swing.JFrame {
         jd_perfil.getContentPane().setLayout(jd_perfilLayout);
         jd_perfilLayout.setHorizontalGroup(
             jd_perfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jt_usuarioPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
+            .addComponent(jt_usuarioPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 419, Short.MAX_VALUE)
         );
         jd_perfilLayout.setVerticalGroup(
             jd_perfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -570,7 +581,7 @@ public class principal extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Noto Sans", 1, 48)); // NOI18N
-        jLabel1.setText("SOCIAL NETWORK");
+        jLabel1.setText("MESSENGER ");
         jLabel1.setToolTipText("");
 
         bt_login.setText("ENTRAR");
@@ -602,10 +613,9 @@ public class principal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(72, 72, 72)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -617,7 +627,10 @@ public class principal extends javax.swing.JFrame {
                                     .addComponent(jp_contraseña)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(bt_login, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jt_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jt_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(130, 130, 130)
+                        .addComponent(jLabel1)))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -1000,6 +1013,20 @@ public class principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_bt_vermapaMouseClicked
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        /*utilizando el algoritmo de Kruskal proporcionado por la liberia de graphstream
+        sacamos el arbol recubridor minimo del grafo de amigos de cada persona*/
+        DorogovtsevMendesGenerator gen = new DorogovtsevMendesGenerator();
+        String css = "edge .notintree {size:1px;fill-color:gray;} " +
+				 "edge .intree {size:3px;fill-color:black;}";
+        g.addAttribute("ui.stylesheet", css);
+        this.g.display().setCloseFramePolicy(Viewer.CloseFramePolicy.CLOSE_VIEWER);
+	 	Kruskal kruskal = new Kruskal("ui.class", "intree", "notintree");
+	 
+	 	kruskal.init(g);
+	 	kruskal.compute();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1062,6 +1089,7 @@ public class principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
